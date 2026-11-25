@@ -13,7 +13,16 @@ two grading runs agree.
 
 import os
 
-LINE = "Four billion years of wishes, howls, and 3 a.m. promises \u2014 and not one of you has ever asked how I'm doing."
+# The winning line, named so the entry's voice is explicit in code.
+# Design: the Moon answers back in first person, wry and old and a little
+# tired after four billion years of listening — it names all three things
+# the brief asks for (wishes, howls, 3 a.m. promises) and then lands the
+# comeback by turning the question around: nobody ever asked how the Moon
+# itself is doing. The turn comes at the very end, so it lands on one read.
+MOON_REPLY = "Four billion years of wishes, howls, and 3 a.m. promises \u2014 and not one of you has ever asked how I'm doing."
+
+# Backwards-compatible alias: the entry line.
+LINE = MOON_REPLY
 
 
 def main() -> None:
@@ -23,6 +32,9 @@ def main() -> None:
         raise ValueError("entry must be 1-240 characters")
     if not LINE.strip():
         raise ValueError("entry must not be only white space")
+    # The entry is exactly one line: a stray newline would break the gate.
+    if "\n" in LINE or "\r" in LINE:
+        raise ValueError("entry must be a single line")
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, "entry.txt")
